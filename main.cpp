@@ -1,15 +1,17 @@
 // Arquivo principal do projeto (main.cpp)
+
 #include <iostream>
 #include <vector>
-#include "Cidade.h"
-#include "Trajeto.h"
-#include "Transporte.h"
-#include "Passageiro.h"
-#include "Viagem.h"
+#include "Cidade.h"    // Classe para representar uma cidade
+#include "Trajeto.h"   // Classe para representar trajetos entre cidades
+#include "Transporte.h" // Classe para os meios de transporte
+#include "Passageiro.h" // Classe para os passageiros
+#include "Viagem.h"     // Classe que organiza as viagens
 
 using namespace std;
 
 int main() {
+    // Vetores que armazenam os objetos do sistema
     vector<Cidade*> cidades;
     vector<Trajeto*> trajetos;
     vector<Transporte*> transportes;
@@ -18,6 +20,7 @@ int main() {
 
     int opcao;
     do {
+        // Menu principal
         cout << "\n--- Sistema Controlador de Viagens ---\n";
         cout << "1. Cadastrar Cidade\n";
         cout << "2. Cadastrar Trajeto\n";
@@ -31,14 +34,16 @@ int main() {
 
         switch (opcao) {
             case 1: {
+                // Cadastro de uma cidade
                 string nome;
                 cout << "Digite o nome da cidade: ";
                 getline(cin, nome);
-                cidades.push_back(new Cidade(nome));
+                cidades.push_back(new Cidade(nome)); // Adiciona a cidade ao vetor
                 cout << "Cidade cadastrada com sucesso!\n";
                 break;
             }
             case 2: {
+                // Cadastro de um trajeto entre duas cidades
                 string origem, destino;
                 char tipo;
                 int distancia;
@@ -53,6 +58,7 @@ int main() {
                 cin >> distancia;
                 cin.ignore();
 
+                // Verifica se as cidades existem
                 Cidade* cidadeOrigem = nullptr;
                 Cidade* cidadeDestino = nullptr;
 
@@ -62,6 +68,7 @@ int main() {
                 }
 
                 if (cidadeOrigem && cidadeDestino) {
+                    // Cria o trajeto se as cidades forem válidas
                     trajetos.push_back(new Trajeto(cidadeOrigem, cidadeDestino, tipo, distancia));
                     cout << "Trajeto cadastrado com sucesso!\n";
                 } else {
@@ -70,6 +77,7 @@ int main() {
                 break;
             }
             case 3: {
+                // Cadastro de um transporte
                 string nome, localAtual;
                 char tipo;
                 int capacidade, velocidade, distanciaDescanso, tempoDescanso;
@@ -90,6 +98,7 @@ int main() {
                 cout << "Digite o nome da cidade atual do transporte: ";
                 getline(cin, localAtual);
 
+                // Verifica se a cidade atual existe
                 Cidade* cidadeAtual = nullptr;
                 for (auto& cidade : cidades) {
                     if (cidade->getNome() == localAtual) cidadeAtual = cidade;
@@ -104,6 +113,7 @@ int main() {
                 break;
             }
             case 4: {
+                // Cadastro de um passageiro
                 string nome, localAtual;
 
                 cout << "Digite o nome do passageiro: ";
@@ -111,6 +121,7 @@ int main() {
                 cout << "Digite o nome da cidade atual do passageiro: ";
                 getline(cin, localAtual);
 
+                // Verifica se a cidade existe
                 Cidade* cidadeAtual = nullptr;
                 for (auto& cidade : cidades) {
                     if (cidade->getNome() == localAtual) cidadeAtual = cidade;
@@ -125,6 +136,7 @@ int main() {
                 break;
             }
             case 5: {
+                // Cadastro de uma viagem
                 string nomeTransporte, nomeOrigem, nomeDestino;
                 vector<Passageiro*> passageirosViagem;
 
@@ -135,17 +147,16 @@ int main() {
                 cout << "Digite o nome da cidade de destino: ";
                 getline(cin, nomeDestino);
 
+                // Verificação das cidades e transporte
                 Cidade* origem = nullptr;
                 Cidade* destino = nullptr;
                 Transporte* transporte = nullptr;
 
-                // Encontrar cidade de origem e destino
                 for (auto& cidade : cidades) {
                     if (cidade->getNome() == nomeOrigem) origem = cidade;
                     if (cidade->getNome() == nomeDestino) destino = cidade;
                 }
 
-                // Encontrar transporte
                 for (auto& t : transportes) {
                     if (t->getNome() == nomeTransporte) transporte = t;
                 }
@@ -160,7 +171,7 @@ int main() {
                     break;
                 }
 
-                // Adicionar passageiros à viagem
+                // Adiciona passageiros à viagem
                 int numPassageiros;
                 cout << "Digite o numero de passageiros: ";
                 cin >> numPassageiros;
@@ -186,14 +197,13 @@ int main() {
                     }
                 }
 
-                // Criar a viagem
+                // Cria e armazena a viagem
                 Viagem* novaViagem = new Viagem(transporte, passageirosViagem, origem, destino);
-                viagens.push_back(novaViagem); // Adiciona ao vetor de viagens
+                viagens.push_back(novaViagem);
 
                 cout << "Viagem cadastrada com sucesso!\n";
                 break;
             }
-
             case 6:
                 cout << "Saindo do sistema...\n";
                 break;
@@ -203,7 +213,7 @@ int main() {
 
     } while (opcao != 6);
 
-    // Liberação de memória
+    // Liberação de memória no final do programa
     for (auto& cidade : cidades) delete cidade;
     for (auto& trajeto : trajetos) delete trajeto;
     for (auto& transporte : transportes) delete transporte;
